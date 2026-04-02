@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  --background: #28282B;
+  --text-color: #F0FFFF;
+}
+
+body {
+  font-family: 'Orbitron', sans-serif;
+  background-color: var(--background);
+  color: var(--text-color)
+}
