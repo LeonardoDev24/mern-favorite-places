@@ -1,4 +1,3 @@
-import './Users.css'
 import UsersList from '../components/UsersList'
 
 function Users() {
