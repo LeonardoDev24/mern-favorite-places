@@ -14,3 +14,10 @@ body {
   background-color: var(--background);
   color: var(--text-color)
 }
+
+.center {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
