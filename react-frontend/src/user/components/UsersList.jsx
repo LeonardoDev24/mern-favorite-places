@@ -1,4 +1,5 @@
 import UserItem from "./UserItem"
+import Card from "../../shared/components/Card"
 import './UsersList.css'
 
 function UsersList(props) {
@@ -6,7 +7,9 @@ function UsersList(props) {
     if (items.length === 0) {
         return (
             <div className="center">
-                <h2>No users found!</h2>
+                <Card>
+                    <h2>No users found!</h2>
+                </Card>
             </div>
         )
     }
