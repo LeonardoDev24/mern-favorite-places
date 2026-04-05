@@ -9,6 +9,7 @@ function App() {
       <MainNavigation/>
       <main>
         <Routes>
+          <Route path='/' element={<Users/>}/>
           <Route path='/users' element={<Users/>}/>
           <Route path='/places/new' element={<NewPlace/>}/>
         </Routes>
