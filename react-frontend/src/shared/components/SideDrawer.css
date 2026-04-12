@@ -7,4 +7,27 @@
     width: 70%;
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    animation: openDrawer 400ms forwards;
+}
+
+.side-drawer.closing {
+    animation: closeDrawer 400ms forwards;
+}
+
+@keyframes openDrawer {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
+
+@keyframes closeDrawer {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
 }
