@@ -3,6 +3,7 @@ import './PlaceItem.css'
 import Card from '../../shared/components/Card'
 import Button from '../../shared/components/Button'
 import Modal from '../../shared/components/Modal'
+import Map from '../../shared/components/Map'
 
 function PlaceItem(props) {
     const {id,image,title,description,address,creatorId,coordinates} = props
@@ -22,7 +23,7 @@ function PlaceItem(props) {
             footer={<Button onClick={closeMap}>CLOSE</Button>}
         >
             <div className='map-container'>
-                <h2>THE MAP!</h2>
+                <Map coordinates={coordinates}/>
             </div>
         </Modal>
         <li className='place-item'>
