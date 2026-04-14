@@ -1,12 +1,15 @@
 .modal {
   z-index: 100;
   position: fixed;
-  top: 22vh;
+  /* top: 22vh; */
+  top: 12vh;
   left: 10%;
   width: 80%;
   background: white;
+  color: #1B1212;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 8px;
+  animation: showModal 1s forwards;
 }
 
 .modal__header {
@@ -33,6 +36,15 @@
     left: calc(50% - 20rem);
     width: 40rem;
   }
+}
+
+@keyframes showModal {
+    from {
+        transform: translateY(-100%)
+    }
+    to {
+        transform: translateX(0%);
+    }
 }
 
 .modal-enter {

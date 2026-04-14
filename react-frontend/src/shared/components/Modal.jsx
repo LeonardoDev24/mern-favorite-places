@@ -34,7 +34,7 @@ function Modal(props) {
     const {show,onCancel} = props
     return <>
         {show && <Backdrop onClick={onCancel}/>}
-        <ModalOverlay {...props}/>
+        {show && <ModalOverlay {...props}/>}
     </>
 }
 
