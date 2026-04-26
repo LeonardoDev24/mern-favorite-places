@@ -1,59 +1,23 @@
-import { act, useCallback, useReducer } from 'react'
+import { useForm } from '../../shared/hooks/form-hook'
 import Input from '../../shared/components/Input'
 import Button from '../../shared/components/Button'
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/util/validators'
 import './PlaceForm.css'
 
-function formReducer(state,action) {
-    switch (action.type) {
-        case 'INPUT_CHANGE':
-            let formIsValid = true
-            for (const inputId in state.inputs) {
-                if (inputId === action.inputId) {
-                    formIsValid = formIsValid && action.isValid
-                } else {
-                    formIsValid = formIsValid && state.inputs[inputId].isValid
-                }
-            }
-            return {
-                ...state,
-                inputs: {
-                    ...state.inputs,
-                    [action.inputId]: {
-                        value: action.value,
-                        isValid: action.isValid
-                    }
-                },
-                isValid: formIsValid
-            }
-        default:
-            return state;
-    }
-}
+
 
 function NewPlace() {
-    const [formState,dispatch] = useReducer(formReducer,{
-        inputs: {
-            title: {
-                value: '',
-                isValid: false
-            },
-            description: {
-                value: '',
-                isValid: false
-            }
+    const initialInputs = {
+        title: {
+            value: '',
+            isValid: false
         },
-        isValid: false
-    })
-    const inputChange = useCallback((id,value,isValid) => {
-        const action = {
-            type: 'INPUT_CHANGE',
-            value: value,
-            isValid: isValid,
-            inputId: id
+        description: {
+            value: '',
+            isValid: false
         }
-        dispatch(action)
-    },[])
+    }
+    const [formState,inputChange] = useForm(initialInputs,false)
 
     const placeSubmit = event => {
         event.preventDefault()
