@@ -1,6 +1,7 @@
 import './PlaceList.css'
 import Card from '../../shared/components/Card'
 import PlaceItem from './PlaceItem'
+import Button from '../../shared/components/Button'
 
 function PlaceList(props) {
     const {items} = props
@@ -9,7 +10,7 @@ function PlaceList(props) {
             <div className='place-list center'>
                 <Card>
                     <h2>No places found. Maybe create one?</h2>
-                    <button>Share place</button>
+                    <Button to='/places/new'>Share place</Button>
                 </Card>
             </div>
         )
