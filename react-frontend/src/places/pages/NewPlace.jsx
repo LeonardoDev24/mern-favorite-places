@@ -1,5 +1,6 @@
-import './NewPlace.css'
 import Input from '../../shared/components/Input'
+import { VALIDATOR_REQUIRE } from '../../shared/util/validators'
+import './NewPlace.css'
 
 function NewPlace() {
     return (
@@ -8,7 +9,7 @@ function NewPlace() {
                 element="input" 
                 type="text" 
                 label="Title"
-                validators={[]}
+                validators={[VALIDATOR_REQUIRE()]}
                 errorText="Please enter a valid title"
             />
         </form>

@@ -1,4 +1,5 @@
 import { useReducer } from 'react'
+import { validate } from '../util/validators';
 import './Input.css'
 
 function inputReducer(state,action) {
@@ -7,7 +8,12 @@ function inputReducer(state,action) {
             return {
                 ...state,
                 value: action.val,
-                isValid: true
+                isValid: validate(action.val,action.validators)
+            };
+        case 'TOUCH':
+            return {
+                ...state,
+                isTouched: true
             }
         default:
             return state;
@@ -17,12 +23,24 @@ function inputReducer(state,action) {
 function Input(props) {
     const {id,label,element,type,placeholder,rows,errorText} = props
 
-    const [inputState,dispatch] = useReducer(inputReducer,{value: '', isValid: false})
+    const [inputState,dispatch] = useReducer(inputReducer,{
+        value: '', 
+        isValid: false,
+        isTouched: false
+    })
     
     const changeHandler = event => {
         const action = {
             type: 'CHANGE',
-            val: event.target.value
+            val: event.target.value,
+            validators: props.validators
+        }
+        dispatch(action)
+    }
+
+    const touchHandler = () => {
+        const action = {
+            type: 'TOUCH'
         }
         dispatch(action)
     }
@@ -34,21 +52,23 @@ function Input(props) {
             placeholder={placeholder}
             onChange={changeHandler}
             value={inputState.value}
+            onBlur={touchHandler}
         /> :
         <textarea 
             id={id} 
             rows={rows || 3}
             onChange={changeHandler}
             value={inputState.value}
+            onBlur={touchHandler}
         ></textarea>
     
     return (
         <div className={`form-control 
-            ${!inputState.isValid && 'form-control--invalid'}`}
+            ${!inputState.isValid && inputState.isTouched && 'form-control--invalid'}`}
         >
             <label htmlFor={id}>{label}</label>
             {elementProp}
-            {!inputState.isValid && <p>{errorText}</p>}
+            {!inputState.isValid && inputState.isTouched && <p>{errorText}</p>}
         </div>
     )
 }
