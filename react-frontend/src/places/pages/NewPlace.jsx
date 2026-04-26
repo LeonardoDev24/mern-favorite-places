@@ -4,8 +4,6 @@ import Button from '../../shared/components/Button'
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/util/validators'
 import './PlaceForm.css'
 
-
-
 function NewPlace() {
     const initialInputs = {
         title: {

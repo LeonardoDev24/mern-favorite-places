@@ -1,3 +1,4 @@
+import { useEffect,useState } from "react"
 import { useParams } from "react-router-dom"
 import { useForm } from "../../shared/hooks/form-hook"
 import Input from "../../shared/components/Input"
@@ -34,6 +35,21 @@ const DUMMY_PLACES = [
 
 function UpdatePlace() {
     const { placeId } = useParams()
+    const [isLoading,setIsLoading] = useState(true)
+    // const identifiedPlace = DUMMY_PLACES.find(place => place.id === placeId)
+    
+    const voidInputs = {
+        title: {
+            value: '',
+            isValid: false
+        },
+        description: {
+            value: '',
+            isValid: false
+        }
+    }
+    const [formState,inputChange,setFormData] = useForm(voidInputs,false)
+    
     const identifiedPlace = DUMMY_PLACES.find(place => place.id === placeId)
     if (!identifiedPlace) {
         return (
@@ -42,7 +58,6 @@ function UpdatePlace() {
             </div>
         )
     }
-
     const initialInputs = {
         title: {
             value: identifiedPlace.title,
@@ -53,11 +68,22 @@ function UpdatePlace() {
             isValid: true
         }
     }
-    const [formState,inputChange] = useForm(initialInputs,true)
+    useEffect(() => {
+        setFormData(initialInputs,true)
+        setIsLoading(false)
+    },[setFormData,identifiedPlace])
     
     const placeUpdateSubmit = event => {
         event.preventDefault()
         console.info(formState.inputs)
+    }
+   
+    if (isLoading) {
+        return (
+            <div className="center">
+                <h2>Loading...</h2>
+            </div>
+        )
     }
 
     return (
