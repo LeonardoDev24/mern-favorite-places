@@ -1,15 +1,58 @@
-import { useCallback } from 'react'
+import { act, useCallback, useReducer } from 'react'
 import Input from '../../shared/components/Input'
+import Button from '../../shared/components/Button'
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/util/validators'
 import './NewPlace.css'
 
+function formReducer(state,action) {
+    switch (action.type) {
+        case 'INPUT_CHANGE':
+            let formIsValid = true
+            for (const inputId in state.inputs) {
+                if (inputId === action.inputId) {
+                    formIsValid = formIsValid && action.isValid
+                } else {
+                    formIsValid = formIsValid && state.inputs[inputId].isValid
+                }
+            }
+            return {
+                ...state,
+                inputs: {
+                    ...state.inputs,
+                    [action.inputId]: {
+                        value: action.value,
+                        isValid: action.isValid
+                    }
+                },
+                isValid: formIsValid
+            }
+        default:
+            return state;
+    }
+}
+
 function NewPlace() {
-    const titleChange = useCallback((id,value,isValid) => {
-
-    },[])
-
-    const descriptionChange = useCallback((id,value,isValid) => {
-
+    const [formState,dispatch] = useReducer(formReducer,{
+        inputs: {
+            title: {
+                value: '',
+                isValid: false
+            },
+            description: {
+                value: '',
+                isValid: false
+            }
+        },
+        isValid: false
+    })
+    const inputChange = useCallback((id,value,isValid) => {
+        const action = {
+            type: 'INPUT_CHANGE',
+            value: value,
+            isValid: isValid,
+            inputId: id
+        }
+        dispatch(action)
     },[])
 
     return (
@@ -21,7 +64,7 @@ function NewPlace() {
                 label="Title"
                 validators={[VALIDATOR_REQUIRE()]}
                 errorText="Please enter a valid title"
-                onInput={titleChange}
+                onInput={inputChange}
             />
             <Input 
                 id="description"
@@ -29,8 +72,11 @@ function NewPlace() {
                 label="Description"
                 validators={[VALIDATOR_MINLENGTH(5)]}
                 errorText="Please enter a valid description (at least 5 characters)"
-                onInput={descriptionChange}
+                onInput={inputChange}
             />
+            <Button type="submit" disabled={!formState.isValid}>
+                ADD PLACE
+            </Button>
         </form>
     )
 }
