@@ -55,8 +55,13 @@ function NewPlace() {
         dispatch(action)
     },[])
 
+    const placeSubmit = event => {
+        event.preventDefault()
+        console.info(formState.inputs)
+        // Send this to backend!
+    }
     return (
-        <form action="" className="place-form">
+        <form className="place-form" onSubmit={placeSubmit}>
             <Input 
                 id="title"
                 element="input" 
@@ -72,6 +77,15 @@ function NewPlace() {
                 label="Description"
                 validators={[VALIDATOR_MINLENGTH(5)]}
                 errorText="Please enter a valid description (at least 5 characters)"
+                onInput={inputChange}
+            />
+            <Input 
+                id="address"
+                element="input" 
+                type="text" 
+                label="Address"
+                validators={[VALIDATOR_REQUIRE()]}
+                errorText="Please enter a valid address"
                 onInput={inputChange}
             />
             <Button type="submit" disabled={!formState.isValid}>
