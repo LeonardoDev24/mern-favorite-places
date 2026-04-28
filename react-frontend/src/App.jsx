@@ -24,19 +24,41 @@ function App() {
     login,
     logout
   }
-  
+
+  let routes = null
+  if (isLoggedIn) {
+    routes = (
+      <>
+        <Route path='/' element={<Users/>}/>
+        <Route path='/users' element={<Users/>}/>
+        <Route path='/:userId/places' element={<UserPlaces/>}/>
+        <Route path='/places/new' element={<NewPlace/>}/>
+        <Route path='/places/:placeId' element={<UpdatePlace/>}/>
+      </>
+    )
+  } else {
+    routes = (
+      <>
+        <Route path='/' element={<Users/>}/>
+        <Route path='/users' element={<Users/>}/>
+        <Route path='/:userId/places' element={<UserPlaces/>}/>
+        <Route path='/auth' element={<Auth/>} />
+      </>
+    )
+  }
   return (
     <AuthContext.Provider value={initValue}>
       <BrowserRouter>
         <MainNavigation/>
         <main>
           <Routes>
-            <Route path='/' element={<Users/>}/>
+            {/* <Route path='/' element={<Users/>}/>
             <Route path='/users' element={<Users/>}/>
             <Route path='/:userId/places' element={<UserPlaces/>}/>
             <Route path='/places/new' element={<NewPlace/>}/>
             <Route path='/places/:placeId' element={<UpdatePlace/>}/>
-            <Route path='/auth' element={<Auth/>} />
+            <Route path='/auth' element={<Auth/>} /> */}
+            {routes}
           </Routes>
         </main>
       </BrowserRouter>
