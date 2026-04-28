@@ -33,7 +33,9 @@ function Auth() {
         console.log(formState.inputs)
         // window.location.pathname = '/'
         navigate('/')
-        login()
+        setTimeout(() => {
+            login()
+        },200)
     }
 
     const switchMode = () => {
