@@ -1,11 +1,13 @@
-import './Auth.css'
+import { useState } from 'react'
 import Card from '../../shared/components/Card'
 import Input from '../../shared/components/Input'
 import Button from '../../shared/components/Button'
-import { VALIDATOR_EMAIL,VALIDATOR_MINLENGTH } from '../../shared/util/validators'
+import { VALIDATOR_EMAIL,VALIDATOR_MINLENGTH,VALIDATOR_REQUIRE } from '../../shared/util/validators'
 import { useForm } from '../../shared/hooks/form-hook'
+import './Auth.css'
 
 function Auth() {
+    const [isLoginMode,setIsloginMode] = useState(true)
     const voidInputs = {
         email: {
             value: '',
@@ -16,11 +18,30 @@ function Auth() {
             isValid: false
         }
     }
-    const [formState,inputChange] = useForm(voidInputs,false)
+    const [formState,inputChange,setFormData] = useForm(voidInputs,false)
 
     const authSubmit = event => {
         event.preventDefault()
         console.log(formState.inputs)
+    }
+
+    const switchMode = () => {
+        if (!isLoginMode) {
+            const formValidity = formState.inputs.email.isValid && formState.inputs.password.isValid
+            setFormData({
+                ...formState.inputs,
+                name: null
+            },formValidity)
+        } else {
+            setFormData({
+                ...formState.inputs,
+                name: {
+                    value: '',
+                    isValid: false
+                }
+            },false)
+        }
+        setIsloginMode(prevMode => !prevMode)
     }
 
     return (
@@ -28,6 +49,17 @@ function Auth() {
             <h2>Login required</h2>
             <hr />
             <form onSubmit={authSubmit}>
+                {!isLoginMode && 
+                    <Input
+                        element="input"
+                        id="name"
+                        type="text"
+                        label="Your name"
+                        validators={[VALIDATOR_REQUIRE()]}
+                        errorText="Please enter your name"
+                        onInput={inputChange}
+                    />
+                }
                 <Input 
                     id="email"
                     element="input"
@@ -47,9 +79,12 @@ function Auth() {
                     onInput={inputChange}
                 />
                 <Button type="submit" disabled={!formState.isValid}>
-                    LOGIN
+                    {isLoginMode ? 'LOGIN' : 'SIGN UP'}
                 </Button>
             </form>
+            <Button inverse onClick={switchMode}>
+                SWITCH TO {isLoginMode ? 'SIGN UP' : 'LOGIN'}
+            </Button>
         </Card>
     )
 }
