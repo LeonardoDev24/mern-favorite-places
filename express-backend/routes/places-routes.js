@@ -15,6 +15,12 @@ const DUMMY_PLACES = [
     }
 ]
 
+router.get('/user/:userId',(req,res,next) => {
+    const userId = req.params.userId
+    const place = DUMMY_PLACES.find(p => p.creator === userId)
+    res.json({place})
+})
+
 router.get('/:placeId',(req,res,next) => {
     const placeId = req.params.placeId
     const place = DUMMY_PLACES.find(p => p.id === placeId)
