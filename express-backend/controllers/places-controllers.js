@@ -65,9 +65,21 @@ const updatePlace = (req,res,next) => {
     res.status(200).json({place: updatedPlace})
 }
 
+const deletePlace = (req,res,next) => {
+    const placeId = req.params.placeId
+    const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId)
+    if (placeIndex < 0) {
+        throw new HttpError('Could not find a place for the provided id',404)
+    }
+
+    DUMMY_PLACES.splice(placeIndex,1)
+    res.status(200).json({message: 'Deleted place'})
+}
+
 module.exports = {
     getPlaceById,
     getPlaceByUserId,
     createPlace,
-    updatePlace
+    updatePlace,
+    deletePlace
 }
