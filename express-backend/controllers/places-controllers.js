@@ -54,10 +54,18 @@ const createPlace = (req,res,next) => {
         creator
     }
     DUMMY_PLACES.push(createdPlace)
+    console.log(DUMMY_PLACES)
     res.status(201).json({place: createdPlace})
 }
 
 const updatePlace = (req,res,next) => {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        console.error(errors)
+        throw new HttpError('Invalid input data, please check your info',422)
+    }
+
     const { title, description } = req.body
     const placeId = req.params.placeId
 
