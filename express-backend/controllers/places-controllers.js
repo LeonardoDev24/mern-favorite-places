@@ -48,8 +48,26 @@ const createPlace = (req,res,next) => {
     res.status(201).json({place: createdPlace})
 }
 
+const updatePlace = (req,res,next) => {
+    const { title, description } = req.body
+    const placeId = req.params.placeId
+
+    const updatedPlace = { ...DUMMY_PLACES.find(p => p.id === placeId) }
+    const placeIndex = DUMMY_PLACES.findIndex(p => p.id === placeId)
+    if (placeIndex < 0) {
+        throw new HttpError('Could not find a place for the provided id',404)
+    }
+
+    updatedPlace.title = title
+    updatedPlace.description= description
+    DUMMY_PLACES[placeIndex] = updatedPlace
+
+    res.status(200).json({place: updatedPlace})
+}
+
 module.exports = {
     getPlaceById,
     getPlaceByUserId,
-    createPlace
+    createPlace,
+    updatePlace
 }
