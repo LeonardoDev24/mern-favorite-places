@@ -18,7 +18,7 @@ async function getCoordsForAddress(address) {
 
     const [lng,lat] = data.features[0].geometry.coordinates
     const coordinates = {lat,lng}
-    console.log(coordinates)
+    return coordinates
 }
 
 module.exports = getCoordsForAddress
