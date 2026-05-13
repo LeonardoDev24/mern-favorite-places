@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 
 const placesRoutes = require('./routes/places-routes')
 const usersRoutes = require('./routes/users-routes')
@@ -26,4 +27,10 @@ app.use((error,req,res,next) =>{
     res.json({message: error.message || 'An unknown error occurred!'})
 })
 
-app.listen(4040)
+mongoose.connect('mongodb://localhost:27017/FavPlaces')
+    .then(() => {
+        app.listen(4040,() => {
+            console.info('Connection successfully!')
+        })
+    })
+    .catch(error => console.log(error.message))
