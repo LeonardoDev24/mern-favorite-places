@@ -61,11 +61,18 @@ const signup = async (req,res,next) => {
     }
 }
 
-const login = (req,res,next) => {
+const login = async (req,res,next) => {
     const { email, password } = req.body
-    const identifiedUser = DUMMY_USERS.find(u => u.email === email)
-    if (!identifiedUser || identifiedUser.password !== password) {
-        const error = new HttpError('Incorrect user email or password',401)
+
+    try {
+        const existingUser = await User.findOne({ email: email })
+        if (!existingUser || existingUser.password !== password) {
+            const error = new HttpError('Invalid credentials, could not log you in',401)
+            next(error)
+            return
+        }
+    } catch (err) {
+        const error = new HttpError('Loggin in failed, please try again later',500)
         next(error)
         return
     }
