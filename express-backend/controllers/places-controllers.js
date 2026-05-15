@@ -4,20 +4,6 @@ const HttpError = require('../models/http-error')
 const getCoordsForAddress = require('../util/location')
 const Place = require('../models/place-model')
 
-const DUMMY_PLACES = [
-    {
-        id: 'p1',
-        title: 'Empire State Building',
-        description: 'One of the most famous sky scrapers in the world',
-        location: {
-            lat: 40.7484474,
-            lng: -73.9871516
-        },
-        address: '20 W 34th St, New York NY 10001',
-        creator: 'u1'
-    }
-]
-
 const getPlaceById = async (req,res,next) => {
     const placeId = req.params.placeId
     try {
@@ -92,7 +78,9 @@ const updatePlace = async (req,res,next) => {
 
     if (!errors.isEmpty()) {
         console.error(errors)
-        throw new HttpError('Invalid input data, please check your info',422)
+        const error = new HttpError('Invalid input data, please check your info',422)
+        next(error)
+        return
     }
 
     const { title, description } = req.body

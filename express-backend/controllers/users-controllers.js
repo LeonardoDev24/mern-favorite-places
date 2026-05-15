@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator')
 const HttpError = require('../models/http-error')
+const User = require('../models/user-model')
 
 const DUMMY_USERS = [
     {
@@ -20,37 +21,53 @@ const getUsers = (req,res,next) => {
     res.json({users: DUMMY_USERS})
 }
 
-const signup = (req,res,next) => {
+const signup = async (req,res,next) => {
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
         console.error(errors)
-        throw new HttpError('Invalid input data, please check your info',422)
+        const error = new HttpError('Invalid input data, please check your info',422)
+        next(error)
+        return
     }
 
     const { name, email, password } = req.body
 
-    const hasUser = DUMMY_USERS.some(u => u.email === email)
-    if (hasUser) {
-        throw new HttpError('Cannot create a user with an existing email',422)
-    }
+    try {
+        const existingUser = await User.findOne({ email: email})
+        if (existingUser) {
+            const error = new HttpError('User exists already, please login instead',422)
+            next(error)
+            return
+        }
+        
+        const createdUser = new User({
+            name,
+            email,
+            password,
+            image: 'https://images.pexels.com/photos/20503680/pexels-photo-20503680.jpeg',
+            places: 'p1'
+        })
 
-    const createdUser = {
-        id: Math.floor(Math.random()*10000),
-        name,
-        email,
-        password
+        await createdUser.save()
+        res.status(201)
+            .json({
+                user: createdUser.toObject({getters: true})
+            })
+    } catch (err) {
+        const error = new HttpError('Signing up failed, please try again later',500)
+        next(error)
+        return
     }
-
-    DUMMY_USERS.push(createdUser)
-    res.status(201).json({user: createdUser})
 }
 
 const login = (req,res,next) => {
     const { email, password } = req.body
     const identifiedUser = DUMMY_USERS.find(u => u.email === email)
     if (!identifiedUser || identifiedUser.password !== password) {
-        throw new HttpError('Incorrect user email or password',401)
+        const error = new HttpError('Incorrect user email or password',401)
+        next(error)
+        return
     }
 
     res.json({message: 'Logged in successfully!'})
