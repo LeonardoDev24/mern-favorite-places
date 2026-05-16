@@ -3,6 +3,8 @@ const { validationResult } = require('express-validator')
 const HttpError = require('../models/http-error')
 const getCoordsForAddress = require('../util/location')
 const Place = require('../models/place-model')
+const User = require('../models/user-model')
+// const mongoose = require('mongoose')
 
 const getPlaceById = async (req,res,next) => {
     const placeId = req.params.placeId
@@ -51,6 +53,9 @@ const createPlace = async (req,res,next) => {
 
     const { title, description, address, creator } = req.body
 
+    // const session = await mongoose.startSession()
+    // session.startTransaction()
+
     try {
         const coordinates = await getCoordsForAddress(address)
 
@@ -63,10 +68,22 @@ const createPlace = async (req,res,next) => {
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Atop_the_Rock_%288721964134%29.jpg/1280px-Atop_the_Rock_%288721964134%29.jpg'
         })
 
+        const user = await User.findById(creator)
+        if (!user) {
+            const error = new HttpError('We could not find user for provided ID',404)
+            next(error)
+            return
+        }
+
         await createdPlace.save()
+        user.places.push(createdPlace)
+        await user.save()
+        // await session.commitTransaction()
+
         res.status(201).json({place: createdPlace})
 
     } catch (err) {
+        // session.abortTransaction()
         const error = new HttpError('Something went wrong, please try again later',500)
         next(error)
         return
