@@ -30,7 +30,6 @@ function Auth() {
 
     const authSubmit = async (event) => {
         event.preventDefault()
-        console.log(formState.inputs)
         
         if (isLoginMode) {
             
@@ -53,7 +52,7 @@ function Auth() {
                 console.error(error)
             }
         }
-        
+
         navigate('/')
         setTimeout(() => {
             login()

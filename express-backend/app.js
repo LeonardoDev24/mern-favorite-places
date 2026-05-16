@@ -12,6 +12,13 @@ const app = express()
 
 app.use(bodyParser.json())
 
+app.use((req,res,next) => {
+    res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:3000')
+    res.setHeader('Access-Control-Allow-Headers','*')
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, PATCH, DELETE')
+    next()
+})
+
 app.use('/api/places',placesRoutes)
 app.use('/api/users',usersRoutes)
 
