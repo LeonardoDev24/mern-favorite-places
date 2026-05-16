@@ -40,7 +40,7 @@ const signup = async (req,res,next) => {
             email,
             password,
             image: 'https://images.pexels.com/photos/20503680/pexels-photo-20503680.jpeg',
-            places: 'p1'
+            places: []
         })
 
         await createdUser.save()
