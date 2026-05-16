@@ -37,12 +37,43 @@ function Auth() {
 
     const authSubmit = async (event) => {
         event.preventDefault()
+        setIsLoading(true)
         
         if (isLoginMode) {
-            
+            try {
+                const response = await fetch('http://127.0.0.1:4040/api/users/login',{
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: formState.inputs.email.value,
+                        password: formState.inputs.password.value
+                    })
+                })
+
+                await new Promise(resolve =>
+                    setTimeout(resolve, 1000)
+                )
+
+                const data = await response.json()
+                if (!response.ok) {
+                    throw new Error(data.message)
+                }
+                console.log(data)
+
+                setIsLoading(false)
+                navigate('/')
+                setTimeout(() => {
+                    login()
+                },200)
+            } catch (error) {
+                console.error(error)
+                setIsLoading(false)
+                setError(error.message || 'Something went wrong, please try again')
+            }
         } else {
             try {
-                setIsLoading(true)
                 const response = await fetch('http://127.0.0.1:4040/api/users/signup',{
                     method: 'POST',
                     headers: {
