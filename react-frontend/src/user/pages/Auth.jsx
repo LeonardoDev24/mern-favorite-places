@@ -1,14 +1,21 @@
 import { useState,useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import Card from '../../shared/components/Card'
 import Input from '../../shared/components/Input'
 import Button from '../../shared/components/Button'
+import ErrorModal from '../../shared/components/ErrorModal'
+import LoadingSpinner from '../../shared/components/LoadingSpinner'
+
 import { VALIDATOR_EMAIL,VALIDATOR_MINLENGTH,VALIDATOR_REQUIRE } from '../../shared/util/validators'
 import { useForm } from '../../shared/hooks/form-hook'
 import { AuthContext } from '../../shared/context/auth-context'
 import './Auth.css'
 
 function Auth() {
+    const [isLoading,setIsLoading] = useState(false)
+    const [error,setError] = useState('')
+
     // for the nav links
     const auth = useContext(AuthContext)
     const {login} = auth
@@ -35,6 +42,7 @@ function Auth() {
             
         } else {
             try {
+                setIsLoading(true)
                 const response = await fetch('http://127.0.0.1:4040/api/users/signup',{
                     method: 'POST',
                     headers: {
@@ -46,17 +54,28 @@ function Auth() {
                         password: formState.inputs.password.value
                     })
                 })
+
+                await new Promise(resolve =>
+                    setTimeout(resolve, 1000)
+                )
+
                 const data = await response.json()
                 console.log(data)
+
+                setIsLoading(false)
+                navigate('/')
+                setTimeout(() => {
+                    login()
+                },200)
             } catch (error) {
+                await new Promise(resolve =>
+                    setTimeout(resolve, 1000)
+                )
                 console.error(error)
+                setIsLoading(false)
+                setError(error.message || 'Something went wrong, please try again')
             }
         }
-
-        navigate('/')
-        setTimeout(() => {
-            login()
-        },200)
     }
 
     const switchMode = () => {
@@ -80,6 +99,7 @@ function Auth() {
 
     return (
         <Card className="authentication">
+            {isLoading && <LoadingSpinner asOverlay/>}
             <h2>Login required</h2>
             <hr />
             <form onSubmit={authSubmit}>
