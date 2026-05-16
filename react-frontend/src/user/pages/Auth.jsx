@@ -14,7 +14,7 @@ import './Auth.css'
 
 function Auth() {
     const [isLoading,setIsLoading] = useState(false)
-    const [error,setError] = useState('')
+    const [error,setError] = useState(null)
 
     // for the nav links
     const auth = useContext(AuthContext)
@@ -60,6 +60,9 @@ function Auth() {
                 )
 
                 const data = await response.json()
+                if (!response.ok) {
+                    throw new Error(data.message)
+                }
                 console.log(data)
 
                 setIsLoading(false)
@@ -68,9 +71,6 @@ function Auth() {
                     login()
                 },200)
             } catch (error) {
-                await new Promise(resolve =>
-                    setTimeout(resolve, 1000)
-                )
                 console.error(error)
                 setIsLoading(false)
                 setError(error.message || 'Something went wrong, please try again')
@@ -97,7 +97,13 @@ function Auth() {
         setIsloginMode(prevMode => !prevMode)
     }
 
+    const errorHandler = () => {
+        setError(null)
+    }
+
     return (
+        <>
+        <ErrorModal error={error} onClear={errorHandler}/>
         <Card className="authentication">
             {isLoading && <LoadingSpinner asOverlay/>}
             <h2>Login required</h2>
@@ -140,6 +146,7 @@ function Auth() {
                 SWITCH TO {isLoginMode ? 'SIGN UP' : 'LOGIN'}
             </Button>
         </Card>
+        </>
     )
 }
 
