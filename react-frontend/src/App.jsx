@@ -52,12 +52,6 @@ function App() {
         <MainNavigation/>
         <main>
           <Routes>
-            {/* <Route path='/' element={<Users/>}/>
-            <Route path='/users' element={<Users/>}/>
-            <Route path='/:userId/places' element={<UserPlaces/>}/>
-            <Route path='/places/new' element={<NewPlace/>}/>
-            <Route path='/places/:placeId' element={<UpdatePlace/>}/>
-            <Route path='/auth' element={<Auth/>} /> */}
             {routes}
           </Routes>
         </main>

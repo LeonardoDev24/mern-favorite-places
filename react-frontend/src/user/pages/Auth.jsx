@@ -28,10 +28,32 @@ function Auth() {
     }
     const [formState,inputChange,setFormData] = useForm(voidInputs,false)
 
-    const authSubmit = event => {
+    const authSubmit = async (event) => {
         event.preventDefault()
         console.log(formState.inputs)
-        // window.location.pathname = '/'
+        
+        if (isLoginMode) {
+            
+        } else {
+            try {
+                const response = await fetch('http://127.0.0.1:4040/api/users/signup',{
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: formState.inputs.name.value,
+                        email: formState.inputs.email.value,
+                        password: formState.inputs.password.value
+                    })
+                })
+                const data = await response.json()
+                console.log(data)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        
         navigate('/')
         setTimeout(() => {
             login()
