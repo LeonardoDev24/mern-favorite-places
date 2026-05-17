@@ -4,7 +4,7 @@ import PlaceItem from './PlaceItem'
 import Button from '../../shared/components/Button'
 
 function PlaceList(props) {
-    const {items} = props
+    const {items,onDeletePlace} = props
     if (items.length === 0) {
         return (
             <div className='place-list center'>
@@ -28,6 +28,7 @@ function PlaceList(props) {
                     address={place.address}
                     creatorId={place.creator}
                     coordinates={place.location}
+                    onDelete={onDeletePlace}
                 />)
             )}
         </ul>

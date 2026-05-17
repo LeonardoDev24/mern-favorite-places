@@ -24,6 +24,12 @@ function UserPlaces() {
     useEffect(() => {
         getUserPlaces()
     },[sendRequest,userId])
+
+    const deletePlace = (deletedPlaceId) => {
+        setLoadedPlaces(prevPlaces => 
+            prevPlaces.filter(place => place.id !== deletedPlaceId)
+        )
+    }
     return (
         <>
             <ErrorModal error={error} onClear={clearError}/>
@@ -31,7 +37,11 @@ function UserPlaces() {
             <div className="center">
                 <LoadingSpinner/>
             </div>}
-            {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces}/>}
+            {!isLoading && loadedPlaces && 
+            <PlaceList 
+                items={loadedPlaces}
+                onDeletePlace={deletePlace}
+            />}
         </>
     )
 }
