@@ -4,9 +4,9 @@ const User = require('../models/user-model')
 
 const getUsers = async (req,res,next) => {
     try {
-        const users = await User.find({},"_id name email")
+        const users = await User.find({},"id name email image places")
         res.json({
-            users: users.map(user => user.toObject())
+            users: users.map(user => user.toObject({getters: true}))
         })
     } catch (err) {
         const error = new HttpError('Fetching users failed, please try again later',500)

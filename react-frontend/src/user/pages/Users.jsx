@@ -1,21 +1,50 @@
+import { useEffect, useState } from 'react'
 import UsersList from '../components/UsersList'
+import LoadingSpinner from '../../shared/components/LoadingSpinner'
+import ErrorModal from '../../shared/components/ErrorModal'
 
 function Users() {
-    const users = [
-        {
-            id: 'u1',
-            name: 'Max Schwarz',
-            image: 'https://images.pexels.com/photos/30996430/pexels-photo-30996430.jpeg',
-            places: 3
-        },
-        {
-            id: 'u2',
-            name: 'Clark Kent',
-            image: 'https://images.pexels.com/photos/20503680/pexels-photo-20503680.jpeg',
-            places: 4
+    const [isLoading,setIsLoading] = useState(false)
+    const [error,setError] = useState(null)
+    const [users,setUsers] = useState(null)
+
+    const getAllUsers = async () => {
+        setIsLoading(true)
+        await new Promise(resolve => setTimeout(resolve,1000))
+        try {
+            const response = await fetch('http://127.0.0.1:4040/api/users')
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.message)
+            }
+
+            setUsers(data.users)
+        } catch (error) {
+            setError(error.message)
+        } finally {
+            setIsLoading(false)
         }
-    ]
-    return <UsersList items={users}/>
+    }
+
+    useEffect(() => {
+        getAllUsers()
+    },[])
+
+    const errorHandler = () => {
+        setError(null)
+    }
+
+    return (
+        <>
+            <ErrorModal error={error} onClear={errorHandler} />
+            {isLoading && 
+            <div className='center'>
+                <LoadingSpinner/>
+            </div>}
+            {!isLoading && users && <UsersList items={users} />}
+        </>
+    )
 }
 
 export default Users

@@ -54,9 +54,7 @@ function Auth() {
                 })
             })
 
-            await new Promise(resolve =>
-                setTimeout(resolve, 1000)
-            )
+            await new Promise(resolve => setTimeout(resolve, 1000))
 
             const data = await response.json()
             if (!response.ok) {
