@@ -9,12 +9,12 @@ import LoadingSpinner from '../../shared/components/LoadingSpinner'
 
 import { VALIDATOR_EMAIL,VALIDATOR_MINLENGTH,VALIDATOR_REQUIRE } from '../../shared/util/validators'
 import { useForm } from '../../shared/hooks/form-hook'
+import { useHttpClient } from '../../shared/hooks/http-hook'
 import { AuthContext } from '../../shared/context/auth-context'
 import './Auth.css'
 
 function Auth() {
-    const [isLoading,setIsLoading] = useState(false)
-    const [error,setError] = useState(null)
+    const {isLoading,error,sendRequest, clearError} = useHttpClient()
 
     // for the nav links
     const auth = useContext(AuthContext)
@@ -37,40 +37,35 @@ function Auth() {
 
     const authSubmit = async (event) => {
         event.preventDefault()
-        setIsLoading(true)
         
         const endpoint = isLoginMode ? 'login' : 'signup'
 
+        const body = JSON.stringify({
+            name: formState.inputs.name?.value || null,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value
+        })
+
+        const headers = {
+            "Content-Type": "application/json"
+        }
+
         try {
-            const response = await fetch(`http://127.0.0.1:4040/api/users/${endpoint}`,{
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: formState.inputs.name?.value || null,
-                    email: formState.inputs.email.value,
-                    password: formState.inputs.password.value
-                })
-            })
+            const data = await sendRequest(
+                `http://127.0.0.1:4040/api/users/${endpoint}`,
+                'POST',
+                body,
+                headers
+            )
 
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            const data = await response.json()
-            if (!response.ok) {
-                throw new Error(data.message)
-            }
             console.log(data)
 
-            setIsLoading(false)
             navigate('/')
             setTimeout(() => {
                 login()
             },200)
         } catch (error) {
             console.error(error)
-            setIsLoading(false)
-            setError(error.message || 'Something went wrong, please try again')
         }
     }
 
@@ -93,13 +88,9 @@ function Auth() {
         setIsloginMode(prevMode => !prevMode)
     }
 
-    const errorHandler = () => {
-        setError(null)
-    }
-
     return (
         <>
-        <ErrorModal error={error} onClear={errorHandler}/>
+        <ErrorModal error={error} onClear={clearError}/>
         <Card className="authentication">
             {isLoading && <LoadingSpinner asOverlay/>}
             <h2>Login required</h2>
