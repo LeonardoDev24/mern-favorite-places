@@ -19,17 +19,17 @@ export const useHttpClient = () => {
                 headers,
                 signal: httpAbortCtrl.signal
             })
-    
+            
             const data = await response.json()
             
             activeHttpRequest.current = activeHttpRequest.current.filter(
                 reqCtrl => reqCtrl !== httpAbortCtrl
             )
-
+            
             if (!response.ok) {
                 throw new Error(data.message)
             }
-
+            
             return data
         } catch (error) {
             setError(error.message)
