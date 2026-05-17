@@ -65,13 +65,15 @@ const login = async (req,res,next) => {
             next(error)
             return
         }
+        res.json({
+            message: 'Logged in successfully!', 
+            user: existingUser.toObject({getters: true})
+        })
     } catch (err) {
         const error = new HttpError('Loggin in failed, please try again later',500)
         next(error)
         return
     }
-
-    res.json({message: 'Logged in successfully!'})
 }
 
 module.exports = {

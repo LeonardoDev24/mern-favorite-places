@@ -62,7 +62,7 @@ function Auth() {
 
             navigate('/')
             setTimeout(() => {
-                login()
+                login(data.user.id)
             },200)
         } catch (error) {
             console.error(error)

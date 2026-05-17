@@ -10,17 +10,21 @@ import { AuthContext } from './shared/context/auth-context'
 
 function App() {
   const [isLoggedIn,setIsLoggedIn] = useState(false)
+  const [userId,setUserId] =useState(null)
 
-  const login = useCallback(() => {
+  const login = useCallback((uid) => {
     setIsLoggedIn(true)
+    setUserId(uid)
   },[])
 
   const logout = useCallback(()=> {
     setIsLoggedIn(false)
+    setUserId(null)
   })
 
   const initValue = {
     isLoggedIn,
+    userId,
     login,
     logout
   }
