@@ -14,7 +14,7 @@ function PlaceItem(props) {
     const auth = useContext(AuthContext)
     const {isLoggedIn} = auth
 
-    const {id,image,title,description,address,coordinates,onDelete} = props
+    const {id,image,title,description,address,creatorId,coordinates,onDelete} = props
     const [showMap,setShowMap] = useState(false)
     
     const openMap = () => setShowMap(true)
@@ -80,7 +80,7 @@ function PlaceItem(props) {
                 </div>
                 <div className="place-item__actions">
                     <Button inverse onClick={openMap}>VIEW ON MAP</Button>
-                    {isLoggedIn && <>
+                    {isLoggedIn && auth.userId === creatorId && <>
                         <Button to={`/places/${id}`}>EDIT</Button>
                         <Button danger onClick={showDeleteWarning}>DELETE</Button>
                     </>}
