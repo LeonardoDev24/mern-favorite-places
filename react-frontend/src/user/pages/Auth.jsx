@@ -6,6 +6,7 @@ import Input from '../../shared/components/Input'
 import Button from '../../shared/components/Button'
 import ErrorModal from '../../shared/components/ErrorModal'
 import LoadingSpinner from '../../shared/components/LoadingSpinner'
+import ImageUpload from '../../shared/components/ImageUpload'
 
 import { VALIDATOR_EMAIL,VALIDATOR_MINLENGTH,VALIDATOR_REQUIRE } from '../../shared/util/validators'
 import { useForm } from '../../shared/hooks/form-hook'
@@ -97,6 +98,8 @@ function Auth() {
             <hr />
             <form onSubmit={authSubmit}>
                 {!isLoginMode && 
+                <>
+                    <ImageUpload id='image' center/>
                     <Input
                         element="input"
                         id="name"
@@ -106,6 +109,7 @@ function Auth() {
                         errorText="Please enter your name"
                         onInput={inputChange}
                     />
+                </>
                 }
                 <Input 
                     id="email"
