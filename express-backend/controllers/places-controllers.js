@@ -65,7 +65,7 @@ const createPlace = async (req,res,next) => {
             location: coordinates,
             address,
             creator,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Atop_the_Rock_%288721964134%29.jpg/1280px-Atop_the_Rock_%288721964134%29.jpg'
+            image: req.file.path
         })
 
         const user = await User.findById(creator)

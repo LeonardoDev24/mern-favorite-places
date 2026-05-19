@@ -109,7 +109,12 @@ function Auth() {
             <form onSubmit={authSubmit}>
                 {!isLoginMode && 
                 <>
-                    <ImageUpload id='image' center onInput={inputChange}/>
+                    <ImageUpload 
+                        id='image' 
+                        center 
+                        onInput={inputChange}
+                        errorText='Please provide an image'
+                    />
                     <Input
                         element="input"
                         id="name"
