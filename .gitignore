@@ -24,4 +24,6 @@ dist-ssr
 *.sw?
 
 upload-*.jpg
+upload-*.jpeg
+upload-*.png
 .env
