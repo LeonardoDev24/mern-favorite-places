@@ -41,6 +41,7 @@ function UserPlaces() {
             <PlaceList 
                 items={loadedPlaces}
                 onDeletePlace={deletePlace}
+                thisUserId={userId}
             />}
         </>
     )

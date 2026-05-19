@@ -3,14 +3,21 @@ import Card from '../../shared/components/Card'
 import PlaceItem from './PlaceItem'
 import Button from '../../shared/components/Button'
 
+import { useContext } from 'react'
+import { AuthContext } from '../../shared/context/auth-context'
+
 function PlaceList(props) {
-    const {items,onDeletePlace} = props
+    const auth = useContext(AuthContext)
+    const {isLoggedIn, userId} = auth
+
+    const {items,onDeletePlace,thisUserId} = props
     if (items.length === 0) {
         return (
             <div className='place-list center'>
                 <Card>
                     <h2>No places found. Maybe create one?</h2>
-                    <Button to='/places/new'>Share place</Button>
+                    {isLoggedIn && userId === thisUserId && 
+                    <Button to='/places/new'>Share place</Button>}
                 </Card>
             </div>
         )
