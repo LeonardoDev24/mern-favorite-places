@@ -41,22 +41,27 @@ function Auth() {
 
         const endpoint = isLoginMode ? 'login' : 'signup'
 
-        const body = JSON.stringify({
-            name: formState.inputs.name?.value || null,
+        const loginBody = JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value
         })
 
-        const headers = {
+        const loginHeaders = {
             "Content-Type": "application/json"
         }
+
+        const formData = new FormData()
+        formData.append('name',formState.inputs.name?.value || '')
+        formData.append('email',formState.inputs.email.value)
+        formData.append('password',formState.inputs.password.value)
+        formData.append('image',formState.inputs.image?.value || null)
 
         try {
             const data = await sendRequest(
                 `http://127.0.0.1:4040/api/users/${endpoint}`,
                 'POST',
-                body,
-                headers
+                isLoginMode ? loginBody: formData,
+                isLoginMode ? loginHeaders : {}
             )
 
             console.log(data)
