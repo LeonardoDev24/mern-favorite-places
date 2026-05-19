@@ -38,7 +38,7 @@ function Auth() {
 
     const authSubmit = async (event) => {
         event.preventDefault()
-        
+
         const endpoint = isLoginMode ? 'login' : 'signup'
 
         const body = JSON.stringify({
@@ -75,13 +75,18 @@ function Auth() {
             const formValidity = formState.inputs.email.isValid && formState.inputs.password.isValid
             setFormData({
                 ...formState.inputs,
-                name: null
+                name: null,
+                image: null,
             },formValidity)
         } else {
             setFormData({
                 ...formState.inputs,
                 name: {
                     value: '',
+                    isValid: false
+                },
+                image: {
+                    value: null,
                     isValid: false
                 }
             },false)
@@ -99,7 +104,7 @@ function Auth() {
             <form onSubmit={authSubmit}>
                 {!isLoginMode && 
                 <>
-                    <ImageUpload id='image' center/>
+                    <ImageUpload id='image' center onInput={inputChange}/>
                     <Input
                         element="input"
                         id="name"
