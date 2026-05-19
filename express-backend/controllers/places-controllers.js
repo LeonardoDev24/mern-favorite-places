@@ -1,10 +1,11 @@
 const { validationResult } = require('express-validator')
+const fs = require('fs')
+// const mongoose = require('mongoose')
 
 const HttpError = require('../models/http-error')
 const getCoordsForAddress = require('../util/location')
 const Place = require('../models/place-model')
 const User = require('../models/user-model')
-// const mongoose = require('mongoose')
 
 const getPlaceById = async (req,res,next) => {
     const placeId = req.params.placeId
@@ -128,11 +129,16 @@ const deletePlace = async (req,res,next) => {
             return
         }
 
+        const imagePath = place.image
+
         place.creator.places.pull(place)
         await place.deleteOne()
         await place.creator.save()
         // await session.commitTransaction()
 
+        fs.unlink(imagePath,(err) => {
+            console.error(err)
+        })
         res.status(200).json({message: 'Deleted place'})
     } catch (err) {
         // await session.abortTransaction()
